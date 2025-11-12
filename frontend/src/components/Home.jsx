@@ -1,11 +1,23 @@
 import React, {useState } from "react";
+import { FaTrash } from "react-icons/fa";
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
-import { Link } from "react-router-dom";
+import { Link , useNavigate} from "react-router-dom";
 
 const Home = () => {
+    const navigate = useNavigate()
+    const [state, setState] = useState({
+      width: 0,
+      height: 0
+  })
     const [show , setShow] = useState(false);
-  const responsive = {
+    const inputHandle = (e)=>{
+        setState({
+            ...state,
+            [e.target.name] : e.target.value
+        })
+    }
+    const responsive = {
         superLargeDesktop: {
             breakpoint: { max: 4000, min: 3000 },
             items: 5
@@ -27,6 +39,15 @@ const Home = () => {
             items: 4
         }
     };
+    const create = ()=>{
+        navigate('/design/create' ,{
+            state : {
+                type : 'create',
+                width : state.width,
+                height : state.height
+            }
+        })
+    }   
   return (
     <div className='pt-5'>
 
@@ -43,15 +64,15 @@ const Home = () => {
                 <div className='grid grid-cols-2 pb-4 gap-3'>
                     <div className='flex gap-2 justify-center items-start flex-col'>
                         <label htmlFor="width">Width</label>
-                        <input type="number" name="width" id="width" className='w-full outline-none px-2 py-1 bg-[#1b1a1a] border border-[#404040] rounded-md'/>
+                        <input onChange={inputHandle} type="number" name="width" id="width" className='w-full outline-none px-2 py-1 bg-[#1b1a1a] border border-[#404040] rounded-md'/>
                     </div>
                     <div className='flex gap-2 justify-center items-start flex-col'>
                         <label htmlFor="height">Height</label>
-                        <input type="number" name="height" id="height" className='w-full outline-none px-2 py-1 bg-[#1b1a1a] border border-[#404040] rounded-md'/>
+                        <input onChange={inputHandle} type="number" name="height" id="height" className='w-full outline-none px-2 py-1 bg-[#1b1a1a] border border-[#404040] rounded-md'/>
                     </div>
                 </div>
 
-                <button className='px-4 py-2 text-[13px] overflow-hidden text-center bg-[#8b3dffad] text-white rounded-[3px] font-medium hover:bg-[#8b3dffd3] w-full'>
+                <button onClick={create} className='px-4 py-2 text-[13px] overflow-hidden text-center bg-[#8b3dffad] text-white rounded-[3px] font-medium hover:bg-[#8b3dffd3] w-full'>
                     Create new design
                 </button>
             </div>
@@ -71,10 +92,13 @@ const Home = () => {
             <div>
                 <Carousel autoPlay={true} infinite={true} responsive={responsive} transitionDuration={500}>
                     {
-                        [1,2,3,4,5,6,7,8].map((d,i)=><div key={i}>
-                            <Link>
-                                <img src="http://localhost:5173/project.jpeg" alt="" />
+                        [1,2,3,4,5,6,7,8].map((d,i)=><div key={i} className="realative group w-full h-[170px] px-2 ">
+                            <Link className="w-full h-[150px] block bg-[#ffffff12] p-4 rounded-md">
+                                <img className="w-full h-full object-cover object-[center_-50px] rounded-md overflow-hidden" src="https://github.com/Yasin-0090/SVGSaz/blob/main/frontend/public/project.jpg?raw=true" alt="" />
                             </Link>
+                            <div className="absolute hidden cursor-pointer top-1 right-2 text-red-500 p-2 transition-all duration-500 group-hover:block">
+                                <FaTrash/>
+                            </div>
                         </div>)
                     }
                 </Carousel>

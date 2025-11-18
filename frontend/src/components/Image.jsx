@@ -1,6 +1,6 @@
 import React from "react";
 
-const Image = () => {
+const Image = ({add_image}) => {
   return (
     <div className="grid grid-cols-2 gap-2">
       {[
@@ -9,6 +9,7 @@ const Image = () => {
       ].map((img, i) => (
         <div
           key={i}
+          onClick={()=>add_image('https://github.com/Yasin-0090/SVGSaz/blob/main/frontend/public/project.jpg?raw=true')}
           className="w-full h-[90px] overflow-hidden rounded-sm cursor-pointer"
         >
           <img

@@ -4,11 +4,18 @@ import {AiOutlineGoogle} from 'react-icons/ai'
 const index = () => {
     const [type , setType] = useState('')
     const [show , setShow] = useState(false)
+    const [loader, setLoader]  =useState(false)
     const [state, setState] = useState({
         name: '',
         email: '',
         password: ''
     })
+    const inputHandle = (e)=>{
+      setState({
+        ...state,
+        [e.target.value] : e.target.value
+      })
+    }
   return (  
     <div className="bg-[#18191b] min-h-screen w-full">
         <div className={`w-screen ${show ? 'visible opacity-100' : 'invisible opacity-30'} transition-all duration-500 h-screen fixed bg-[#252627ad] flex justify-center items-center`}>
@@ -47,15 +54,15 @@ const index = () => {
                     type === 'signup' &&  <form action="">
                         <div className="flex flex-col gap-3 mb-3 text-white">
                             <label htmlFor="name">Name</label>
-                            <input type="text" name="name" id="name" placeholder="name" value={state.name} className="px-3 py-2 rounded-md border outline-none border-[#5c5c5e] focus:border-purple-500 bg-transparent"/>
+                            <input type="text" onChange={inputHandle} value={state.name} name="name" id="name" placeholder="name" className="px-3 py-2 rounded-md border outline-none border-[#5c5c5e] focus:border-purple-500 bg-transparent"/>
                         </div>
                         <div className='flex flex-col gap-3 mb-3 text-white'>
                                 <label htmlFor="email">Email</label>
-                                <input value={state.email} type="email" name='email' id='email' placeholder='email' className='px-3 py-2 rounded-md border outline-none border-[#5c5c5e] focus:border-purple-500 bg-transparent' required />
+                                <input onChange={inputHandle} value={state.email} type="email" name='email' id='email' placeholder='email' className='px-3 py-2 rounded-md border outline-none border-[#5c5c5e] focus:border-purple-500 bg-transparent' required />
                         </div>
                             <div className='flex flex-col gap-3 mb-3 text-white'>
                             <label htmlFor="password">Password</label>
-                            <input type="password" name='password' id='password' placeholder='password' value={state.password} className='px-3 py-2 rounded-md border outline-none border-[#5c5c5e] focus:border-purple-500 bg-transparent' />
+                            <input onChange={inputHandle} value={state.password} type="password" name='password' id='password' placeholder='password'  className='px-3 py-2 rounded-md border outline-none border-[#5c5c5e] focus:border-purple-500 bg-transparent' />
                         </div>
                         <div>
                             <button className="px-3 py-2 rounded-md bg-purple-500 w-full ounline-none hover:bg-purple-600 text-white">Sign in</button>

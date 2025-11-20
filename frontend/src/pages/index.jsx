@@ -1,6 +1,8 @@
 import React, {useState } from "react";
 import {IoMdClose} from 'react-icons/io'
 import {AiOutlineGoogle} from 'react-icons/ai'
+import api from "../utils/api";
+
 const index = () => {
     const [type , setType] = useState('')
     const [show , setShow] = useState(false)
@@ -10,12 +12,54 @@ const index = () => {
         email: '',
         password: ''
     })
+
     const inputHandle = (e)=>{
       setState({
         ...state,
-        [e.target.value] : e.target.value
+        [e.target.name] : e.target.value
       })
     }
+
+    const user_register = async(e)=>{
+      e.preventDefault()
+      try {
+        setLoader(true)
+        const {data} = await api.post('/api/user-register' , state)
+        setLoader(false)
+        localStorage.setItem('canva_token' , data.token)
+           setState({
+            name: '',
+            email: '',
+            password: ''
+           })
+           window.location.href = '/'
+           
+      } catch (error) {
+        setLoader(false)
+        console.log(error.response);
+      }
+    }
+    
+    const user_login = async(e)=>{
+      e.preventDefault()
+      try {
+        setLoader(true)
+        const {data} = await api.post('/api/user-login' , state)
+        setLoader(false)
+        localStorage.setItem('canva_token' , data.token)
+           setState({
+            email: '',
+            password: ''
+           })
+           window.location.href = '/'
+           
+      } catch (error) {
+        setLoader(false)
+        console.log(error.response);
+      }
+    }
+
+
   return (  
     <div className="bg-[#18191b] min-h-screen w-full">
         <div className={`w-screen ${show ? 'visible opacity-100' : 'invisible opacity-30'} transition-all duration-500 h-screen fixed bg-[#252627ad] flex justify-center items-center`}>
@@ -25,17 +69,17 @@ const index = () => {
                 </div>
                   <h2 className='text-white pb-4 text-center text-xl'>Login or sign up in seconds</h2>
                   {
-                    type === 'signin' &&  <form action="">
+                    type === 'signin' &&  <form action="" onSubmit={user_login}>
                         <div className="flex flex-col gap-3 mb-3 text-white">
                             <label htmlFor="email">Email</label>
-                            <input type="email" name="email" id="email" placeholder="email" value={state.email} className="px-3 py-2 rounded-md border outline-none border-[#5c5c5e] focus:border-purple-500 bg-transparent"/>
+                            <input onChange={inputHandle} type="email" name="email" id="email" placeholder="email" value={state.email} className="px-3 py-2 rounded-md border outline-none border-[#5c5c5e] focus:border-purple-500 bg-transparent"/>
                         </div>
                             <div className='flex flex-col gap-3 mb-3 text-white'>
                             <label htmlFor="password">Password</label>
-                            <input type="password" name='password' id='password' placeholder='password' value={state.password} className='px-3 py-2 rounded-md border outline-none border-[#5c5c5e] focus:border-purple-500 bg-transparent' />
+                            <input onChange={inputHandle}  type="password" name='password' id='password' placeholder='password' value={state.password} className='px-3 py-2 rounded-md border outline-none border-[#5c5c5e] focus:border-purple-500 bg-transparent' />
                         </div>
                         <div>
-                            <button className="px-3 py-2 rounded-md bg-purple-500 w-full ounline-none hover:bg-purple-600 text-white">Sign in</button>
+                              <button disabled={loader} className="px-3 py-2 rounded-md bg-purple-500 w-full ounline-none hover:bg-purple-600 text-white">{loader ? 'loading' : 'signin'}</button>
                         </div>
                         <div className='flex py-4 justify-between items-center px-3'>
                             <div className='w-[45%] h-px bg-[#434449]'></div>
@@ -51,10 +95,10 @@ const index = () => {
                     </form>
                   }
                   {
-                    type === 'signup' &&  <form action="">
+                    type === 'signup' &&  <form action="" onSubmit={user_register}>
                         <div className="flex flex-col gap-3 mb-3 text-white">
                             <label htmlFor="name">Name</label>
-                            <input type="text" onChange={inputHandle} value={state.name} name="name" id="name" placeholder="name" className="px-3 py-2 rounded-md border outline-none border-[#5c5c5e] focus:border-purple-500 bg-transparent"/>
+                            <input type="text" onChange={inputHandle} value={state.name} required name="name" id="name" placeholder="name" className="px-3 py-2 rounded-md border outline-none border-[#5c5c5e] focus:border-purple-500 bg-transparent"/>
                         </div>
                         <div className='flex flex-col gap-3 mb-3 text-white'>
                                 <label htmlFor="email">Email</label>
@@ -62,10 +106,10 @@ const index = () => {
                         </div>
                             <div className='flex flex-col gap-3 mb-3 text-white'>
                             <label htmlFor="password">Password</label>
-                            <input onChange={inputHandle} value={state.password} type="password" name='password' id='password' placeholder='password'  className='px-3 py-2 rounded-md border outline-none border-[#5c5c5e] focus:border-purple-500 bg-transparent' />
+                            <input onChange={inputHandle} value={state.password} type="password" name='password' id='password' placeholder='password' required className='px-3 py-2 rounded-md border outline-none border-[#5c5c5e] focus:border-purple-500 bg-transparent' />
                         </div>
                         <div>
-                            <button className="px-3 py-2 rounded-md bg-purple-500 w-full ounline-none hover:bg-purple-600 text-white">Sign in</button>
+                            <button disabled={loader} className="px-3 py-2 rounded-md bg-purple-500 w-full ounline-none hover:bg-purple-600 text-white">{loader ? 'loading' : 'sign up'}</button>
                         </div>
                         <div className='flex py-4 justify-between items-center px-3'>
                             <div className='w-[45%] h-px bg-[#434449]'></div>

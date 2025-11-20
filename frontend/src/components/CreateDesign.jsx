@@ -1,9 +1,20 @@
-import React, { useRef } from 'react'
-import { useLocation } from 'react-router-dom';
+import React, { useEffect, useRef, useState } from 'react'
+import * as htmlToImage from 'html-to-image';
+import {useLocation ,useNavigate} from 'react-router-dom';
+import api from '../utils/api'
+import RotateLoader from 'react-spinners/RotateLoader'
 import CreateComponent from './CreateComponent';
+
+
+
+
 const CreateDesign = () => {
+  const ref = useRef()
+
     const {state} = useLocation()
-    const ref = useRef()
+
+    const navigate = useNavigate()
+
     const obj = {
         name : "main_frame",
         typeof : "rect",
@@ -14,11 +25,53 @@ const CreateDesign = () => {
         color : 'green',
         image : ''
     }
+
+    const [loader , setLoader] = useState(false)
+
+    const create_design = async()=>{
+      const image = await htmlToImage.toBlob(ref.current)
+
+      const design = JSON.stringify(obj)
+
+
+
+      if(image){
+        const formData = new FormData()
+        formData.append('design' , design)
+        formData.append('image' , image)
+        try {
+          setLoader(true)
+          const {data} = await api.post('/api/create-user-design',formData)
+          navigate(`/design/${data.design._id}/edit`)
+          setLoader(false)
+
+        } catch (error) {
+          setLoader(false)
+          console.log(error.response.data);
+        }
+      }
+      
+    }
+
+    useEffect(()=>{
+      if(state && ref.current){
+        create_design()
+      }else{
+        navigate('/')
+      }
+    },[state,ref])
+
+
   return (
     <div className='w-screen h-screen flex justify-center items-center relative'>
         <div ref={ref} className='relative h-auto w-auto overflow-auto'>
             <CreateComponent current_component={{}} info={obj}/>
         </div>
+        {
+          loader && <div className='left-0 top-0 w-full h-full flex justify-center items-center bg-black absolute'>
+            <RotateLoader color='white'/>
+          </div>
+        }
     </div>
   )
 }

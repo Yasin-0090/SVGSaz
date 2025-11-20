@@ -13,6 +13,7 @@ import Projects from '../components/Projects'
 import Image from '../components/Image'
 
 
+
 const Main = () => {
     
     const [state , setState] = useState('')

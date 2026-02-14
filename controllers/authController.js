@@ -37,28 +37,30 @@ class authController {
         }
     }
 
-    user_login = async(req,res)=>{
-        let{name,email,password} = req.body
+    user_login = async (req, res) => {
+
+        let { email, password } = req.body
         try {
             const user = await userModel.findOne({ email }).select('+password')
-            if(user){
-                const match = await bcrypt.compare(password , user.password)
-                if(match){
+
+            if (user) {
+                const match = await bcrypt.compare(password, user.password)
+
+                if (match) {
                     const token = await jwt.sign({
-                    name: user.name,
-                    email: user.email,
-                    _id: user.id
+                        name: user.name,
+                        email: user.email,
+                        _id: user.id
                     }, 'mahdi', {
                         expiresIn: '2d'
                     })
 
-                return res.status(200).json({ message: "Signin success", token })
-
-                }else{
-                    return res.status(404).json({message : "Password invalid"})
+                    return res.status(200).json({ message: "Signin success", token })
+                } else {
+                    return res.status(404).json({ message: "Password invalid" })
                 }
-            }else{
-                return res.status(404).json({message : "Email doesn't exist"})
+            } else {
+                return res.status(404).json({ message: "Email does't exit" })
             }
         } catch (error) {
             console.log(error.message)

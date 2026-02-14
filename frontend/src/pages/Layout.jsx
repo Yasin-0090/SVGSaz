@@ -1,10 +1,30 @@
 import React, { useState } from 'react'
-import { Link , Outlet, useLocation } from 'react-router-dom'
+import { Link , Outlet, useLocation , useNavigate } from 'react-router-dom'
 import {FaHome} from 'react-icons/fa'
 import {BsFolder,BsGrid1X2} from 'react-icons/bs'
+import { token_decode } from '../utils/index'
+import UserImage from '../assets/Picture of user.png'
 const Layout = () => {
+
+    const userInfo = token_decode(localStorage.getItem('canva_token'))
+
+    const navigate = useNavigate()
     const {pathname} = useLocation()
     const [show , setShow] = useState(false);
+
+    const create = () => {
+    navigate("/design/create", {
+      state: {
+        type: "create",
+        width: 600,
+        height: 450
+      },
+    });
+  };
+  const logout = ()=>{
+    localStorage.removeItem('canva_token')
+    window.location.href = '/'
+  }
   return (
     <div className='bg-[#18191b] min-h-screen w-full'>
 
@@ -19,19 +39,19 @@ const Layout = () => {
                         </span>
                     </div>
                     <div className='flex gap-4 justify-center items-center relative'>
-                        <button className='py-2 px-6 overflow-hidden text-center bg-[#8b3bff] text-white rounded-[3px] font-medium hover:bg-[#9553f8]'>
+                        <button onClick={create} className='py-2 px-6 overflow-hidden text-center bg-[#8b3bff] text-white rounded-[3px] font-medium hover:bg-[#9553f8]'>
                             Create a Design
                         </button>
                         <div onClick={()=>setShow(!show)} className='cursor-pointer'>
-                            <img src="https://avatars.githubusercontent.com/u/151134052?v=4" className='w-[45px] h-[45px] rounded-full'  alt="profile" />
+                            <img src={userInfo?.image ? UserImage?.image : UserImage} className='w-[45px] h-[45px] rounded-full'  alt="profile" />
                         </div>
                         <div className={`absolute top-[60px] right-0 w-[250px] bg-[#313030] p-3 border border-gray-700 transition duration-500 ${show ? 'visible opacity-100' : 'invisible opacity-30'}`}>
                             <div className='px-2 py-2 flex justify-start gap-5 items-center'>
-                                <img src="https://avatars.githubusercontent.com/u/151134052?v=4" className='w-10 h-10 rounded-full'  alt="profile" />
+                                <img src={userInfo?.image ? UserImage?.image : UserImage} className='w-10 h-10 rounded-full'  alt="profile" />
                             
                                 <div className='flex justify-center flex-col items-start'>
-                                    <span className='text-[#e0dddd] font-bold text-md'>Mahdi Akbari</span>
-                                    <span className='text-[#c4c0c0] font-bold text-md'>yasin@gmail.com</span>
+                                    <span className='text-[#e0dddd] font-bold text-md'>{userInfo?.name}</span>
+                                    <span className='text-[#c4c0c0] font-bold text-md'>{userInfo?.email}</span>
                                 </div>
                             </div>
                             <ul className='text-[#e0dddd] font-semibold'>
@@ -41,9 +61,9 @@ const Layout = () => {
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link className='p-2 cursor-pointer'>
+                                    <div onClick={logout} className='p-2 cursor-pointer'>
                                     <span>Logout</span>
-                                    </Link>
+                                    </div>
                                 </li>
                             </ul>
                         </div>
@@ -60,9 +80,9 @@ const Layout = () => {
         <div className='flex w-full mt-16'>
             <div className='sidebar w-[300px] p-5 h-[calc(100vh-70px)] fixed'>
                 <div className='px-2 py-2 flex justify-start gap-5 items-center mb-3'>
-                    <img src="https://avatars.githubusercontent.com/u/151134052?v=4" alt="image"  className='w-10 h-10 rounded-full' />
+                    <img src={userInfo?.image ? UserImage?.image : UserImage} alt="image"  className='w-10 h-10 rounded-full' />
                     <div className='flex justify-center flex-col items-start'>
-                        <span className='text-[#e0dddd] font-bold text-md'>Mahdi Akbari</span>
+                        <span className='text-[#e0dddd] font-bold text-md'>{userInfo?.name}</span>
                         <span className='text-[#c0c0c0] text-sm'>free</span>
                     </div>
                 </div>

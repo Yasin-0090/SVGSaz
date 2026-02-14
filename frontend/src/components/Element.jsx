@@ -1,58 +1,28 @@
 import React from 'react'
-
-const Element = ({id, info , exId}) => {
-  return (
-    <>
-    {
-        exId ? 
+import { TbRefresh } from "react-icons/tb";
+const Element = ({ id, info, exId }) => {
+    
+    return (
         <>
-            <div onMouseDown={()=>info.resizeElement(exId , info)} className='hidden absolute group-hover:block -bottom-[3px] -right-[3px] w-2.5 h-2.5 cursor-nwse-resize bg-green-500 z-99999'>
+            {
+                info.name !== 'text' ? exId ? <>
+                    <div onMouseDown={() => info.resizeElement(exId, info)} className=' rounded-full border-2 border-white absolute group-hover:block -bottom-[7px] -right-[7px] w-3 h-3 cursor-nwse-resize bg-purple-500 z-99999 '></div>
+                    <div onMouseDown={() => info.resizeElement(exId, info)} className=' rounded-full border-2 border-white absolute group-hover:block -top-[7px] -right-[7px] w-3 h-3 cursor-nesw-resize bg-purple-500 z-99999 '></div>
+                    <div onMouseDown={() => info.resizeElement(exId, info)} className=' rounded-full border-2 border-white absolute group-hover:block -bottom-[7px] -left-[7px] w-3 h-3 cursor-nesw-resize bg-purple-500 z-99999 '></div>
+                    <div onMouseDown={() => info.resizeElement(exId, info)} className=' rounded-full border-2 border-white absolute group-hover:block -top-[7px] -left-[7px] w-3 h-3 cursor-nwse-resize bg-purple-500 z-99999 '></div>
+                </> : <>
+                    <div onMouseDown={() => info.resizeElement(id, info)} className=' rounded-full border-2 border-white absolute group-hover:block -bottom-[7px] -right-[7px] w-3 h-3 cursor-nwse-resize bg-purple-500 z-99999 '></div>
+                    <div onMouseDown={() => info.resizeElement(id, info)} className=' rounded-full border-2 border-white absolute group-hover:block -top-[7px] -right-[7px] w-3 h-3 cursor-nesw-resize bg-purple-500 z-99999 '></div>
+                    <div onMouseDown={() => info.resizeElement(id, info)} className=' rounded-full border-2 border-white absolute group-hover:block -bottom-[7px] -left-[7px] w-3 h-3 cursor-nesw-resize bg-purple-500 z-99999 '></div>
+                    <div onMouseDown={() => info.resizeElement(id, info)} className=' rounded-full border-2 border-white absolute group-hover:block -top-[7px] -left-[7px] w-3 h-3 cursor-nwse-resize bg-purple-500 z-99999 '></div>
+                </> : ""
+            }
 
-            </div>
-            <div onMouseDown={()=>info.resizeElement(exId , info)} className='hidden absolute group-hover:block -top-[3px] -right-[3px] w-2.5 h-2.5 cursor-nwse-resize bg-green-500 z-99999'>
-
-            </div>
-            <div onMouseDown={()=>info.resizeElement(exId , info)} className='hidden absolute group-hover:block -bottom-[3px] -left-[3px] w-2.5 h-2.5 cursor-nwse-resize bg-green-500 z-99999'>
-
-            </div>
-        </> 
-        : 
-        <>
-            <div onMouseDown={()=>info.resizeElement(id , info)} className='hidden absolute group-hover:block -bottom-[3px] -right-[3px] w-2.5 h-2.5 cursor-nwse-resize bg-green-500 z-99999'>
-
-            </div>
-
-            <div onMouseDown={()=>info.resizeElement(id , info)} className='hidden absolute group-hover:block -top-[3px] -right-[3px] w-2.5 h-2.5 cursor-nwse-resize bg-green-500 z-99999'>
-
-            </div>
-
-            <div onMouseDown={()=>info.resizeElement(id , info)} className='hidden absolute group-hover:block -bottom-[3px] -left-[3px] w-2.5 h-2.5 cursor-nwse-resize bg-green-500 z-99999'>
-
+            <div onMouseDown={() => info.rotateElement(id, info)} className='w-[25px] flex absolute justify-center cursor-pointer left-[50%] -translate-x-[50%] -top-14 items-center hover:bg-indigo-600 hover:text-white h-[25px] rounded-full border-2 border-slate-500'>
+                <TbRefresh />
             </div>
         </>
-    }
-    
-        <div onMouseDown={()=>info.rotateElement(id , info)} className='hidden absolute group-hover:block -top-[3px] -left-[3px] w-2.5 h-2.5 translate-[-50%,0%] bg-green-500 z-99999 cursor-nwse-resize'>
-
-        </div>
-
-        <div onMouseDown={()=>info.moveElement(id , info)} className='hidden absolute group-hover:block -top-[3px] left-[50%] w-2.5 h-2.5 translate-[-50%,0%] bg-green-500 z-99999 cursor-nwse-resize'>
-
-        </div>
-
-        <div onMouseDown={()=>info.moveElement(id , info)} className='hidden absolute group-hover:block top-[50%] -left-[3px] w-2.5 h-2.5 translate-[-0%,50%] bg-green-500 z-99999 cursor-nwse-resize'>
-
-        </div>
-
-        <div onMouseDown={()=>info.moveElement(id , info)} className='hidden absolute group-hover:block top-[50%] -right-[3px] w-2.5 h-2.5 translate-[-0%,50%] bg-green-500 z-99999 cursor-nwse-resize'>
-
-        </div>
-
-        <div onMouseDown={()=>info.moveElement(id , info)} className='hidden absolute group-hover:block -bottom-[3px] left-[50%] w-2.5 h-2.5 translate-[-50%,0%] bg-green-500 z-99999 cursor-nwse-resize'>
-
-        </div>
-    </>
-  )
+    )
 }
 
 export default Element

@@ -2,6 +2,7 @@ import React, {useState } from "react";
 import {IoMdClose} from 'react-icons/io'
 import {AiOutlineGoogle} from 'react-icons/ai'
 import api from "../utils/api";
+import toast from 'react-hot-toast'
 
 const index = () => {
     const [type , setType] = useState('')
@@ -36,7 +37,7 @@ const index = () => {
            
       } catch (error) {
         setLoader(false)
-        console.log(error.response);
+        toast.error(error.response.data.message)
       }
     }
     
@@ -55,7 +56,7 @@ const index = () => {
            
       } catch (error) {
         setLoader(false)
-        console.log(error.response);
+        toast.error(error.response.data.message)
       }
     }
 

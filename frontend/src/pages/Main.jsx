@@ -1,23 +1,26 @@
 import React, { useEffect, useState} from 'react'
 import Header from '../components/Header'
+import { useParams } from 'react-router-dom'
 import { MdColorLens, MdKeyboard, MdKeyboardArrowLeft } from 'react-icons/md'
 import { BsFillImageFill , BsFolder} from 'react-icons/bs'
-import { FaShapes , FaCloudUploadAlt } from 'react-icons/fa'
-
+import { FaShapes , FaCloudUploadAlt , FaTrash } from 'react-icons/fa'
+import { IoDuplicateOutline } from "react-icons/io5";
 import { TfiText } from 'react-icons/tfi'
 import { RxTransparencyGrid } from 'react-icons/rx'
 import TemplateDesign from '../components/Main/TemplateDesign'
 import CreateComponent from '../components/CreateComponent'
-import Myimages from '../components/Myimages'
+import MyImages from '../components/MyImages'
 import Projects from '../components/Projects'
-import Image from '../components/Image'
-
+import api from '../utils/api'
+import InitialImage from '../components/InitialImage'
+import BackgroundImages from '../components/BackgroundImages'
 
 
 const Main = () => {
-    
+    const [selectItem, setSelectItem] = useState('')
+    const {design_id} = useParams()
     const [state , setState] = useState('')
-    const [current_component , setCurrentComponent] = useState()
+    const [current_component , setCurrentComponent] = useState('')
     const [color , setColor] = useState('')
     const [image , setImage] = useState('')
     const [left , setLeft] = useState('')
@@ -43,8 +46,8 @@ const Main = () => {
     const [components , setComponents] = useState([
         {
             name : "main_frame",
-            typeof : "rect",
-            id : Math.floor((Math.random()*100)+1),
+            type : "rect",
+            id : Math.floor((Math.random() * 100) + 1),
             height : 450,
             width : 650,
             z_index :1 ,
@@ -68,7 +71,7 @@ const Main = () => {
         const currentDiv = document.getElementById(id)
         
         const mouseMove=({movementX , movementY})=>{
-            
+            setSelectItem("")
             const getStyle = window.getComputedStyle(currentDiv)
             const left = parseInt(getStyle.left);
             const top = parseInt(getStyle.top);
@@ -78,7 +81,8 @@ const Main = () => {
             }
         }
 
-        const mouseUp = ()=>{  
+        const mouseUp = (e)=>{  
+            setSelectItem(currentInfo.id)
             isMoving = false
             window.removeEventListener('mousemove', mouseMove)
             window.removeEventListener('mouseup', mouseUp)
@@ -87,6 +91,9 @@ const Main = () => {
         }
         window.addEventListener('mousemove', mouseMove)
         window.addEventListener('mouseup', mouseUp)
+        currentDiv.ondragstart = function () {
+            return false;
+        };
     }
 
     const resizeElement =(id,currentInfo)=>{
@@ -113,6 +120,9 @@ const Main = () => {
         }
         window.addEventListener('mousemove', mouseMove)
         window.addEventListener('mouseup', mouseUp)
+        currentDiv.ondragstart = function () {
+            return false;
+        };
     }
     
     const rotateElement = (id, currentInfo) => {
@@ -152,17 +162,22 @@ const Main = () => {
 
         window.addEventListener('mousemove', mouseMove)
         window.addEventListener('mouseup', mouseUp)
+        target.ondragstart = function () {
+            return false;
+        };
     }
 
 
+    const removeComponent = (id) => {
+        const temp = components.filter(c => c.id !== id); 
+        setCurrentComponent('');
+        setComponents(temp);
+    }
 
-
-
-
-   const removeComponent = (id) => {
-    const temp = components.filter(c => c.id !== id); 
-    setCurrentComponent('');
-    setComponents(temp);
+    const duplicate = (current) => {
+        if (current) {
+            setComponents([...components, { ...current, id: Date.now() }])
+        }
     }
 
     const remove_background =()=>{
@@ -181,8 +196,9 @@ const Main = () => {
 
     const createShape=(name , type)=>{
         setCurrentComponent('')
+        const id = Date.now()
         const style={
-            id : components.length + 1,
+            id : id,
             name : name,
             type,
             left:10,
@@ -198,14 +214,16 @@ const Main = () => {
             resizeElement,
             rotateElement
         }
-        setComponents([...components ,style])
+        setSelectItem(id)
         setCurrentComponent(style)
+        setComponents([...components ,style])
     }
 
    const add_text = (name, type) => {
         setCurrentComponent('')
+        const id = Date.now()
         const style = {
-            id: components.length + 1,
+            id: id,
             name: name,
             type,
             left: 10,
@@ -226,15 +244,16 @@ const Main = () => {
 
         setWeight('')
         setFont('')
+        setSelectItem(id)
         setCurrentComponent(style)
         setComponents([...components, style])
 
     }
    const add_image = (img) => {
         setCurrentComponent('')
-
+        const id = Date.now()
         const style = {
-            id: components.length + 1,
+            id: id,
             name: 'image',
             type: 'image',
             left: 10,
@@ -251,7 +270,7 @@ const Main = () => {
             resizeElement,
             rotateElement
         }
-
+        setSelectItem(id)
         setCurrentComponent(style)
         setComponents([...components, style])
 
@@ -271,8 +290,6 @@ useEffect(() => {
         components[index].padding = padding || current_component.padding
         components[index].weight = weight || current_component.weight
         components[index].title = text || current_component.title
-
-        setCurrentComponent(components[index]); //more //////////////////////////
     }
 
     if (current_component.name === 'image') {
@@ -292,7 +309,7 @@ useEffect(() => {
       components[index].z_index = zIndex || current_component.z_index
     }
 
-    setComponents([...temp, components[index]]);
+    setComponents([...components])
   }
   setColor('')
   setWidth('')
@@ -305,13 +322,34 @@ useEffect(() => {
   setText('')
 }, [color, image, left, top ,width , height , opacity,zIndex, padding, font, weight , text,radius]);
 
+useEffect(() => {
+        const get_design = async () => {
+            try {
+                const { data } = await api.get(`/api/user-design/${design_id}`)
+        
+                const { design } = data
 
+                for (let i = 0; i < design.length; i++) {
+                    design[i].setCurrentComponent = (a) => setCurrentComponent(a)
+                    design[i].moveElement = moveElement
+                    design[i].resizeElement = resizeElement
+                    design[i].rotateElement = rotateElement
+                    design[i].remove_background = remove_background
+
+                }
+                setComponents(design)
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        get_design()
+    }, [design_id])
 
 
   return (
 
     <div className='min-w-screen h-screen bg-black'>
-        <Header/>
+        <Header components={components} design_id={design_id}/>
         {/* Start Icon Sidebar */}
         <div className='flex h-[calc(100%-60px)] w-screen'>
             <div className='w-20 bg-[#18191b] z-50 h-full text-gray-400 overflow-y-auto'>
@@ -359,9 +397,7 @@ useEffect(() => {
                     <div onClick={()=>setShow({name : '' , status : true})} className='flex absolute justify-center items-center bg-[#252627] w-5 -right-2 text-slate-300 top-[40%] cursor-pointer h-[100px] rounded-full'><MdKeyboardArrowLeft/></div>
                     {
                         state === 'design' && <div>
-                            <div className='grid grid-cols-2 gap-2'>
-                                <TemplateDesign/>
-                            </div>
+                            <TemplateDesign type='main'/> 
                         </div>
                     }
                     {
@@ -378,7 +414,7 @@ useEffect(() => {
                         </div>
                     }
                     {
-                        state === 'image' && <Myimages/>
+                        state === 'image' && <MyImages add_image={add_image}/>
                     }
                     {
                         state === 'text' && <div>
@@ -390,56 +426,56 @@ useEffect(() => {
                         </div>
                     }
                     {
-                        state === 'project' && <Projects/>
+                        state === 'project' && <Projects type='main' design_id={design_id}/>
                     }
                     {
                         state === 'initImages' &&  <div className="h-[88vh] overflow-x-auto flex items-start justify-start [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-                            <Image add_image={add_image}/>
+                            <InitialImage add_image={add_image} />
                         </div>
                     }
                        {
                         state === 'background' && <div className="h-[88vh] overflow-x-auto flex items-start justify-start [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-                            <div className='grid grid-cols-2 gap-2'>
-                                {[
-                                    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 151, 16, 16, 6, 61, 3, 43, 3,
-                                    4, 3, 3, 3, 6, 6,
-                                ].map((img, i) => (
-                                    <div
-                                    onClick={()=>setImage('https://github.com/Yasin-0090/SVGSaz/blob/main/frontend/public/project.jpg?raw=true')}
-                                    key={i}
-                                    className="w-full h-[90px] overflow-hidden rounded-sm cursor-pointer"
-                                    >
-                                    <img
-                                        className="w-full h-full object-fill"
-                                        src={`https://github.com/Yasin-0090/SVGSaz/blob/main/frontend/public/project.jpg?raw=true`}
-                                        alt="image"
-                                    />
-                                    </div>
-                                ))}
-                            </div>
+                            <BackgroundImages type='background' setImage={setImage}/>
                         </div>
                     }
                 </div>
+
+             {/* Start CreateComponent */}
+
                 <div className='w-full flex h-full'>
+
+                 {/* Start of design area */}
+
                     <div className={`flex justify-center relative items-center h-full ${!current_component ? 'w-full' : 'w-[calc(100%-250px)] overflow-hidden'}`}>
                         <div className='max-w-[650px] max-h-[450px] flex justify-center items-center overflow-hidden'>
                             <div id='main_design' className='w-auto relative h-auto overflow-hidden'>
                                 {
-                                    components.map((c,i)=><CreateComponent key={i} info={c} current_component={current_component} removeComponent={removeComponent}/>)
+                                    components.map((c, i) => <CreateComponent selectItem={selectItem} setSelectItem={setSelectItem} key={i} info={c} current_component={current_component} removeComponent={removeComponent} />)
                                 }
                             </div>
                         </div>
                     </div>
+
+                 {/* End of design area */}
+
+                {/* Start of properties panel */}
                     {
-                        current_component && <div className='h-full w-[250px] text-gray-300 bg-[#252627] px-3 py-2'>
+                        current_component && 
+                        <div className='h-full w-[250px] text-gray-300 bg-[#252627] px-3 py-2'>
                                 <div className='flex gap-6 flex-col items-start h-full px-3 justify-start mt-2'>
+                                    {
+                                        current_component.name !== 'main_frame' && <div className='flex justify-start items-center gap-5'>
+                                            <div onClick={() => removeComponent(current_component?.id)} className='w-[30px] flex justify-center items-center rounded-md cursor-pointer h-[30px] bg-slate-700 hover:bg-slate-800'><FaTrash /></div>
+                                            <div onClick={() => duplicate(current_component)} className='w-[30px] flex justify-center items-center rounded-md cursor-pointer h-[30px] bg-slate-700 hover:bg-slate-800'><IoDuplicateOutline /></div>
+                                        </div>
+                                    }
                                     <div className='flex gap-4 items-start justify-start'>
                                         <span>Color :</span>
                                         <label className='w-[30px] h-[30px] cursor-pointer rounded-sm' style={{background : `${current_component.color && current_component.color !== '#fff' ? current_component.color : 'gray'}`}} htmlFor="color"></label>
                                         <input onChange={(e) => setColor(e.target.value)}  type="color" className='invisible' id='color' />
                                     </div>
                                     {
-                                        (current_component.name === 'main_frame' && image) && <div>
+                                        (current_component.name === 'main_frame' && current_component.image) && <div>
                                             <button onClick={remove_background} className='p-1.5 bg-slate-700 text-white rounded-sm'>
                                                 Remove background
                                             </button>
@@ -489,9 +525,14 @@ useEffect(() => {
                                         </div>
                                     }
                                 </div>
-                            </div> 
+                        </div> 
                     }
+                
+                {/* End of properties panel */}
+
                 </div>
+             {/* End of CreateComponent */}
+
             </div>
         </div>
     </div>

@@ -1,9 +1,13 @@
 import React from 'react'
+import TemplateDesign from './main/TemplateDesign'
 
-const Templates = () => {
-  return (
-    <div>Templates</div>
-  )
+const Temlates = () => {
+
+    return (
+        <div>
+            <TemplateDesign />
+        </div>
+    )
 }
 
-export default Templates
+export default Temlates

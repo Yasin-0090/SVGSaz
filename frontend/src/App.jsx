@@ -36,12 +36,12 @@ const router = createBrowserRouter([
   },
   {
     path : '/design/create',
-    element : <CreateDesign/>
+    element : userInfo ?  <CreateDesign/> : <Navigate to='/'/>
   }
   ,
   {
-    path : '/design/:id/edit',
-    element : <Main/>
+    path : '/design/:design_id/edit',
+    element : userInfo ? <Main/> : <Navigate to='/'/>
   }
 ])
 

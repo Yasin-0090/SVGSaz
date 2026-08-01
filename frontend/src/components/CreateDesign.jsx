@@ -5,9 +5,6 @@ import api from '../utils/api'
 import RotateLoader from 'react-spinners/RotateLoader'
 import CreateComponent from './CreateComponent';
 
-
-
-
 const CreateDesign = () => {
   const ref = useRef()
 
@@ -34,8 +31,6 @@ const CreateDesign = () => {
       const image = await htmlToImage.toBlob(ref.current)
 
       const design = JSON.stringify(obj)
-
-
 
       if(image){
         const formData = new FormData()

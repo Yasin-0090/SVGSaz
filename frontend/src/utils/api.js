@@ -1,11 +1,11 @@
 import axios from 'axios'
-const local_api = 'http://localhost:5000'
-const production_api = ''
+// const local_api = 'http://localhost:5000'
+// const production_api = ''
 
 const token = localStorage.getItem('canva_token')
 
 const api = axios.create({
-    baseURL : local_api,
+    baseURL: '',
     headers : {
         'Authorization' : token ? `Bearer ${token}`: ''
     },

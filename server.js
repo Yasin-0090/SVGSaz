@@ -40,12 +40,12 @@ const dbConnect = async () => {
             console.log('production database is connect....')
         }
     } catch (error) {
-        console.log('database connection failed')
+        console.error('Database connection failed:', error);
     }
 }
 
 dbConnect()
 
-const PORT = process.env.PORT
+const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}..`))

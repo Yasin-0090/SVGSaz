@@ -4,11 +4,11 @@ import {AiOutlineGoogle} from 'react-icons/ai'
 import api from "../utils/api";
 import toast from 'react-hot-toast'
 
-const index = () => {
-    const [type , setType] = useState('')
-    const [show , setShow] = useState(false)
-    const [loader, setLoader]  =useState(false)
-    const [state, setState] = useState({
+const Index = () => {
+  const[type , setType] = useState('')
+    const[show , setShow] = useState(false)
+    const[loader, setLoader]  =useState(false)
+    const[state, setState] = useState({
         name: '',
         email: '',
         password: ''
@@ -21,26 +21,26 @@ const index = () => {
       })
     }
 
-    const user_register = async(e)=>{
-      e.preventDefault()
-      try {
-        setLoader(true)
-        const {data} = await api.post('/api/user-register' , state)
-        setLoader(false)
-        localStorage.setItem('canva_token' , data.token)
-           setState({
-            name: '',
-            email: '',
-            password: ''
-           })
-           window.location.href = '/'
-           
-      } catch (error) {
-        setLoader(false)
-        toast.error(error.response.data.message)
+      const user_register = async(e)=>{
+        e.preventDefault()
+        try {
+          setLoader(true)
+          const {data} = await api.post('/api/user-register' , state)
+          setLoader(false)
+          localStorage.setItem('canva_token' , data.token)
+            setState({
+              name: '',
+              email: '',
+              password: ''
+            })
+            window.location.href = '/'
+            
+        } catch (error) {
+          setLoader(false)
+          toast.error(error.response.data.message)
+        }
       }
-    }
-    
+      
     const user_login = async(e)=>{
       e.preventDefault()
       try {
@@ -165,4 +165,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Index;

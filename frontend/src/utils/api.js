@@ -5,7 +5,7 @@ import axios from 'axios'
 const token = localStorage.getItem('canva_token')
 
 const api = axios.create({
-    baseURL: '',
+    baseURL: "https://svgsaz.onrender.com",
     headers : {
         'Authorization' : token ? `Bearer ${token}`: ''
     },

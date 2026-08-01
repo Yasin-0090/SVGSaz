@@ -7,7 +7,7 @@ import { FaShapes , FaCloudUploadAlt , FaTrash } from 'react-icons/fa'
 import { IoDuplicateOutline } from "react-icons/io5";
 import { TfiText } from 'react-icons/tfi'
 import { RxTransparencyGrid } from 'react-icons/rx'
-import TemplateDesign from '../components/Main/TemplateDesign'
+import TemplateDesign from '../components/main/TemplateDesign'
 import CreateComponent from '../components/CreateComponent'
 import MyImages from '../components/MyImages'
 import Projects from '../components/Projects'

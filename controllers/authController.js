@@ -60,7 +60,7 @@ class authController {
                     return res.status(404).json({ message: "Password invalid" })
                 }
             } else {
-                return res.status(404).json({ message: "Email does't exit" })
+                return res.status(404).json({ message: "Email doesn't exit" })
             }
         } catch (error) {
             console.log(error.message)

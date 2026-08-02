@@ -16,7 +16,7 @@ const CreateComponente = ({ info, current_component, removeComponent, selectItem
             zIndex: info.z_index
         }}>
             {
-                info.image && <img className='w-full h-full' src={info.image} alt="image" />
+                info.image && <img className='w-full h-full' src={info.image?.replace("http://", "https://")} alt="image" />
             }
         </div>
     }
@@ -133,7 +133,7 @@ const CreateComponente = ({ info, current_component, removeComponent, selectItem
                 height: info.height + 'px',
                 borderRadius: `${info.radius}%`
             }}>
-                <img className='w-full h-full' src={info.image} alt="image" />
+                <img className='w-full h-full' src={info.image?.replace("http://", "https://")} alt="image" />
             </div>
         </div>
     }

@@ -56,11 +56,7 @@ const downloadSVG = () => {
         return
     }
 
-    const svgString = exportToSVG(
-        components,
-        650,
-        450
-    )
+    const svgString = exportToSVG(components)
 
     const blob = new Blob(
         [svgString],
@@ -89,7 +85,6 @@ const downloadSVG = () => {
 
     setOpenDownloadPopup(false)
 }
-
   const downloadPNG = async () => {
     if (!components || components.length === 0) {
       toast.error('طراحی خالی است!')

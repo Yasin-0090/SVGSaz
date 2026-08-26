@@ -1,3 +1,5 @@
+// src/utils/exportSVG.js
+
 export const exportToSVG = (components, width = 650, height = 450) => {
 
   if (!components || components.length === 0) {
@@ -7,9 +9,16 @@ export const exportToSVG = (components, width = 650, height = 450) => {
   const mainFrame =
     components.find(c => c.name === 'main_frame') || components[0]
 
-  const others = components.filter(c => c !== mainFrame)
+  const others = components.filter(
+    c => c.name !== 'main_frame'
+  )
 
   let elements = ''
+
+
+  // -----------------------------
+  // Background
+  // -----------------------------
 
   if (mainFrame?.image) {
 
@@ -18,8 +27,9 @@ export const exportToSVG = (components, width = 650, height = 450) => {
         href="${mainFrame.image}"
         x="0"
         y="0"
-        width="${mainFrame.width}"
-        height="${mainFrame.height}"
+        width="${width}"
+        height="${height}"
+        preserveAspectRatio="none"
       />
     `
 
@@ -29,12 +39,17 @@ export const exportToSVG = (components, width = 650, height = 450) => {
       <rect
         x="0"
         y="0"
-        width="${mainFrame.width || width}"
-        height="${mainFrame.height || height}"
-        fill="${mainFrame.color || '#ffffff'}"
+        width="${width}"
+        height="${height}"
+        fill="${mainFrame?.color || '#ffffff'}"
       />
     `
   }
+
+
+  // -----------------------------
+  // Other Components
+  // -----------------------------
 
   others.forEach(c => {
 
@@ -56,6 +71,7 @@ export const exportToSVG = (components, width = 650, height = 450) => {
     } = c
 
 
+    // مرکز واقعی Component
     const centerX = left + w / 2
     const centerY = top + h / 2
 
@@ -64,9 +80,14 @@ export const exportToSVG = (components, width = 650, height = 450) => {
       ? `transform="rotate(${rotate} ${centerX} ${centerY})"`
       : ''
 
+
+    // -----------------------------
+    // Shape
+    // -----------------------------
+
     if (c.name === 'shape') {
 
-  
+      // Rectangle
       if (type === 'rect') {
 
         elements += `
@@ -83,13 +104,12 @@ export const exportToSVG = (components, width = 650, height = 450) => {
       }
 
 
+      // Circle
       if (type === 'circle') {
-
-        const circleSize = Math.min(w, h)
 
         const cx = left + w / 2
         const cy = top + h / 2
-        const r = circleSize / 2
+        const r = Math.min(w, h) / 2
 
         elements += `
           <circle
@@ -104,6 +124,7 @@ export const exportToSVG = (components, width = 650, height = 450) => {
       }
 
 
+      // Triangle
       if (type === 'trangle') {
 
         elements += `
@@ -122,6 +143,10 @@ export const exportToSVG = (components, width = 650, height = 450) => {
     }
 
 
+    // -----------------------------
+    // Text
+    // -----------------------------
+
     if (c.name === 'text') {
 
       elements += `
@@ -137,6 +162,10 @@ export const exportToSVG = (components, width = 650, height = 450) => {
       `
     }
 
+
+    // -----------------------------
+    // Image
+    // -----------------------------
 
     if (c.name === 'image' && img) {
 
@@ -162,15 +191,16 @@ export const exportToSVG = (components, width = 650, height = 450) => {
   })
 
 
-  const svgWidth = mainFrame.width || width
-  const svgHeight = mainFrame.height || height
+  // -----------------------------
+  // Final SVG
+  // -----------------------------
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 
 <svg
-  width="${svgWidth}px"
-  height="${svgHeight}px"
-  viewBox="0 0 ${svgWidth} ${svgHeight}"
+  width="${width}px"
+  height="${height}px"
+  viewBox="0 0 ${width} ${height}"
   xmlns="http://www.w3.org/2000/svg"
   xmlns:xlink="http://www.w3.org/1999/xlink"
 >

@@ -50,37 +50,45 @@ const Header = ({ components, design_id }) => {
     }
   }
 
-  const downloadSVG = () => {
+const downloadSVG = () => {
     if (!components || components.length === 0) {
-      toast.error('طراحی خالی است!')
-      return
+        toast.error('طراحی خالی است!')
+        return
     }
-
-    const mainFrame = components.find(
-        component => component.name === 'main_frame'
-    ) || components[0]
-
-    const width = mainFrame.width || 650
-    const height = mainFrame.height || 450
 
     const svgString = exportToSVG(
         components,
-        width,
-        height
+        650,
+        450
     )
-    const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' })
+
+    const blob = new Blob(
+        [svgString],
+        {
+            type: 'image/svg+xml;charset=utf-8'
+        }
+    )
+
     const url = URL.createObjectURL(blob)
 
     const link = document.createElement('a')
+
     link.href = url
-    link.download = `SVGSaz-${new Date().toLocaleDateString('fa-IR').replace(/\//g, '-')}.svg`
+
+    link.download = `SVGSaz-${new Date()
+        .toLocaleDateString('fa-IR')
+        .replace(/\//g, '-')}.svg`
+
     document.body.appendChild(link)
+
     link.click()
+
     document.body.removeChild(link)
+
     URL.revokeObjectURL(url)
 
     setOpenDownloadPopup(false)
-  }
+}
 
   const downloadPNG = async () => {
     if (!components || components.length === 0) {

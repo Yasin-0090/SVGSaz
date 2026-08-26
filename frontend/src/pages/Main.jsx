@@ -404,7 +404,7 @@ useEffect(() => {
                         state === 'shape' && <div className='grid grid-cols-3 gap-2'>
                             <div onClick={()=>createShape('shape' , 'rect')} className='h-[90px] bg-[#3c3c3d] cursor-pointer'>
 
-                            </div>ظ
+                            </div>
                             <div onClick={()=>createShape('shape' , 'circle')} className='h-[90px] bg-[#3c3c3d] cursor-pointer rounded-full'>
 
                             </div>

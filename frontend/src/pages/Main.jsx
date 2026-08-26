@@ -81,7 +81,7 @@ const Main = () => {
             }
         }
 
-        const mouseUp = (e)=>{  
+        const mouseUp = ()=>{  
             setSelectItem(currentInfo.id)
             isMoving = false
             window.removeEventListener('mousemove', mouseMove)
@@ -111,7 +111,7 @@ const Main = () => {
             }
         }
 
-        const mouseUp = (e)=>{  
+        const mouseUp = ()=>{  
             isMoving = false
             window.removeEventListener('mousemove', mouseMove)
             window.removeEventListener('mouseup', mouseUp)
@@ -131,7 +131,7 @@ const Main = () => {
 
         const target = document.getElementById(id)
 
-        const mouseMove = ({ movementX, movementY }) => {
+        const mouseMove = ({ movementX }) => {
 
             const getStyle = window.getComputedStyle(target)
             const trans = getStyle.transform
@@ -146,7 +146,7 @@ const Main = () => {
             target.style.transform = `rotate(${deg}deg)`
 
         }
-        const mouseUp = (e) => {
+        const mouseUp = () => {
 
             window.removeEventListener('mousemove', mouseMove)
             window.removeEventListener('mouseup', mouseUp)
@@ -404,7 +404,7 @@ useEffect(() => {
                         state === 'shape' && <div className='grid grid-cols-3 gap-2'>
                             <div onClick={()=>createShape('shape' , 'rect')} className='h-[90px] bg-[#3c3c3d] cursor-pointer'>
 
-                            </div>
+                            </div>ظ
                             <div onClick={()=>createShape('shape' , 'circle')} className='h-[90px] bg-[#3c3c3d] cursor-pointer rounded-full'>
 
                             </div>

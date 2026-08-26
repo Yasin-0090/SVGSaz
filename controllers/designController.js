@@ -29,9 +29,6 @@ class designController {
 
       const result = await cloudinary.uploader.upload(image[0].filepath);
 
-      console.log("Cloudinary URL:", result.url);
-      console.log("Cloudinary Secure URL:", result.secure_url);
-
       const design = await designModel.create({
         user_id: _id,
         components: [JSON.parse(fields.design[0])],
@@ -93,6 +90,7 @@ class designController {
       });
     }
   };
+
   get_user_design = async (req, res) => {
     const { design_id } = req.params;
     try {
@@ -102,6 +100,7 @@ class designController {
       return res.status(500).json({ message: error.message });
     }
   };
+
   add_user_image = async (req, res) => {
     const { _id } = req.userInfo;
 

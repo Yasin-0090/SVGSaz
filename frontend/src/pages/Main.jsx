@@ -446,7 +446,7 @@ useEffect(() => {
 
                     <div className={`flex justify-center relative items-center h-full ${!current_component ? 'w-full' : 'w-[calc(100%-250px)] overflow-hidden'}`}>
                         <div className='max-w-[650px] max-h-[450px] flex justify-center items-center overflow-hidden'>
-                            <div id='main_design' className='w-auto relative h-auto overflow-hidden'>
+                            <div id='main_design' className='w-auto relative h-auto overflow-hidden select-none'>
                                 {
                                     components.map((c, i) => <CreateComponent selectItem={selectItem} setSelectItem={setSelectItem} key={i} info={c} current_component={current_component} removeComponent={removeComponent} />)
                                 }

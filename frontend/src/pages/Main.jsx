@@ -278,7 +278,6 @@ const Main = () => {
 useEffect(() => {
   if (current_component) {
     const index = components.findIndex(c => c.id === current_component.id);
-    const temp = components.filter(c => c.id !== current_component.id);
 
     if(current_component.name !== 'text'){
         components[index].width = width || current_component.width;
@@ -320,7 +319,7 @@ useEffect(() => {
   setOpacity('')
   setzIndex('')
   setText('')
-}, [color, image, left, top ,width , height , opacity,zIndex, padding, font, weight , text,radius]);
+}, [color, image, left, top ,width , height , opacity,zIndex, padding, font, weight , text,radius , rotate]);
 
 useEffect(() => {
         const get_design = async () => {
@@ -335,7 +334,6 @@ useEffect(() => {
                     design[i].resizeElement = resizeElement
                     design[i].rotateElement = rotateElement
                     design[i].remove_background = remove_background
-
                 }
                 setComponents(design)
             } catch (error) {

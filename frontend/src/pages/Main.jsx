@@ -289,6 +289,8 @@ useEffect(() => {
             components[index].padding = padding || current_component.padding
             components[index].weight = weight || current_component.weight
             components[index].title = text || current_component.title
+
+            setCurrentComponent({...components[index]})
         }
 
         if (current_component.name === 'image') {

@@ -277,48 +277,48 @@ const Main = () => {
     }
 useEffect(() => {
   if (current_component) {
-    const index = components.findIndex(c => c.id === current_component.id);
+        const index = components.findIndex(c => c.id === current_component.id);
 
-    if(current_component.name !== 'text'){
-        components[index].width = width || current_component.width;
-        components[index].height = height || current_component.height; 
-        components[index].rotate = rotate || current_component.rotate; 
+        if(current_component.name !== 'text'){
+            components[index].width = width || current_component.width;
+            components[index].height = height || current_component.height; 
+            components[index].rotate = rotate || current_component.rotate; 
+        }
+        if (current_component.name === 'text') {
+            components[index].font = font || current_component.font
+            components[index].padding = padding || current_component.padding
+            components[index].weight = weight || current_component.weight
+            components[index].title = text || current_component.title
+        }
+
+        if (current_component.name === 'image') {
+            components[index].radius = radius || current_component.radius
+        }
+
+        if (current_component.name === 'main_frame' && image) {
+        components[index].image = image || current_component.image;
+        }
+
+        components[index].color = color || current_component.color;
+
+        if (current_component.name !== 'main_frame') {
+        components[index].left = left || current_component.left;
+        components[index].top = top || current_component.top;
+        components[index].opacity = opacity || current_component.opacity
+        components[index].z_index = zIndex || current_component.z_index
+        }
+
+        setComponents([...components])
+        setColor('')
+        setWidth('')
+        setHeight('')
+        setTop('')
+        setLeft('')
+        setRotate(0)
+        setOpacity('')
+        setzIndex('')
+        setText('')
     }
-    if (current_component.name === 'text') {
-        components[index].font = font || current_component.font
-        components[index].padding = padding || current_component.padding
-        components[index].weight = weight || current_component.weight
-        components[index].title = text || current_component.title
-    }
-
-    if (current_component.name === 'image') {
-        components[index].radius = radius || current_component.radius
-    }
-
-    if (current_component.name === 'main_frame' && image) {
-      components[index].image = image || current_component.image;
-    }
-
-    components[index].color = color || current_component.color;
-
-    if (current_component.name !== 'main_frame') {
-      components[index].left = left || current_component.left;
-      components[index].top = top || current_component.top;
-      components[index].opacity = opacity || current_component.opacity
-      components[index].z_index = zIndex || current_component.z_index
-    }
-
-    setComponents([...components])
-  }
-  setColor('')
-  setWidth('')
-  setHeight('')
-  setTop('')
-  setLeft('')
-  setRotate(0)
-  setOpacity('')
-  setzIndex('')
-  setText('')
 }, [color, image, left, top ,width , height , opacity,zIndex, padding, font, weight , text,radius , rotate]);
 
 useEffect(() => {
